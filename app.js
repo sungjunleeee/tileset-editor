@@ -11,7 +11,7 @@ ctx.arc(250, 100, 50, 0, 2 * Math.PI);
 ctx.fill();
 
 ctx.beginPath();
-ctx.fillStyle = "Red";
-ctx.arc(260, 80, 5, 0, 2 * Math.PI);
-ctx.arc(220, 80, 5, 0, 2 * Math.PI);
+ctx.fillStyle = "White";
+ctx.arc(260 + 10, 80, 8, Math.PI, 2 * Math.PI);
+ctx.arc(220 + 10, 80, 8, Math.PI, 2 * Math.PI);
 ctx.fill();
