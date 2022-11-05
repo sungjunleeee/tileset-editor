@@ -18,6 +18,7 @@ canvas.height = CANVAS_HEIGHT;
 ctx.lineWidth = lineWidth;
 let isPainting = false;
 let isFilling = false;
+let isErasing = false;
 
 function onMove(event) {
   if (isPainting) {
@@ -55,7 +56,10 @@ function onColorClick(event) {
 }
 function onModeClick() {
   ctx.globalCompositeOperation = "source-over";
-  if (isFilling) {
+  if (isErasing) {
+    isErasing = false;
+    ctx.fillStyle = color.value;
+  } else if (isFilling) {
     isFilling = false;
     ctx.fillStyle = color.value;
     modeBtn.innerText = "Fill";
@@ -78,10 +82,9 @@ function onDestroyClick() {
 
 function onEraserClick() {
   ctx.globalCompositeOperation = "destination-out";
-  if (isFilling) {
-    isFilling = false;
-    modeBtn.innerText = "Draw";
-  }
+  isErasing = true;
+  isFilling = false;
+  modeBtn.innerText = "Draw";
 }
 
 function onSaveClick() {
