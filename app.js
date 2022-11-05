@@ -8,10 +8,12 @@ const colorOptions = Array.from(
 );
 const color = document.getElementById("color");
 const lineWidth = document.getElementById("line-width");
+const tileWidth = document.getElementById("x-tile");
+const tileHeight = document.getElementById("y-tile");
 const canvas = document.getElementById("canvas");
 const grid = document.getElementById("grid");
-const ctx = canvas.getContext("2d");
-const g_ctx = grid.getContext("2d");
+let ctx = canvas.getContext("2d");
+let g_ctx = grid.getContext("2d");
 
 const CANVAS_WIDTH = 1024;
 const CANVAS_HEIGHT = 768;
@@ -20,11 +22,52 @@ canvas.height = CANVAS_HEIGHT;
 grid.width = CANVAS_WIDTH;
 grid.height = CANVAS_HEIGHT;
 
-ctx.lineWidth = lineWidth;
+ctx.lineWidth = lineWidth.value;
 ctx.lineCap = "round";
+ctx.lineJoin = "round";
 let isPainting = false;
 let isFilling = false;
 let isErasing = false;
+
+function setCanvasSize() {
+  let x = document.getElementById("x-tile").value;
+  let y = document.getElementById("y-tile").value;
+  console.log(x, y);
+  canvas.width = x * 32;
+  canvas.style.width = String(x * 32) + "px";
+  canvas.height = y * 32;
+  canvas.style.height = String(y * 32) + "px";
+  grid.width = x * 32;
+  grid.style.width = String(x * 32) + "px";
+  grid.height = y * 32;
+  grid.style.height = String(y * 32) + "px";
+
+  ctx = canvas.getContext("2d");
+  g_ctx = grid.getContext("2d");
+  ctx.lineWidth = lineWidth;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  onDestroyClick();
+  drawGrid();
+
+  gridBtn.removeEventListener();
+  function showGrid() {
+    console.log(grid.style.display);
+    if (grid.style.display != "none") {
+      grid.style = "display: none;";
+    } else {
+      grid.style = `width:${grid.width}; height:${grid.height}; position: absolute; left: 0; top: 0; z-index: 1;  `;
+    }
+  }
+  showGrid = function () {
+    console.log(grid.style.display);
+    if (grid.style.display != "none") {
+      grid.style = "display: none;";
+    } else {
+      grid.style = `width:${grid.width}; height:${grid.height}; position: absolute; left: 0; top: 0; z-index: 1;  `;
+    }
+  };
+}
 
 function onMove(event) {
   if (isPainting) {
@@ -102,24 +145,25 @@ function onSaveClick() {
 }
 
 function showGrid() {
-  if (grid.style.cssText != "display: none;") {
+  console.log(grid.style.display);
+  if (grid.style.display != "none") {
     grid.style = "display: none;";
   } else {
-    grid.style = "position: absolute; left: 0; top: 0; z-index: 1";
+    grid.style = `width:${grid.width}; height:${grid.height}; position: absolute; left: 0; top: 0; z-index: 1;  `;
   }
 }
 
 function drawGrid() {
   g_ctx.strokeStyle = "black";
   g_ctx.lineWidth = 1;
-  for (let i = 0; i < Math.floor(CANVAS_WIDTH / 32); i++) {
+  for (let i = 0; i < Math.floor(canvas.width / 32); i++) {
     g_ctx.moveTo(i * 32, 0);
-    g_ctx.lineTo(i * 32, CANVAS_HEIGHT);
+    g_ctx.lineTo(i * 32, canvas.height);
     g_ctx.stroke();
   }
-  for (let i = 0; i < Math.floor(CANVAS_HEIGHT / 32); i++) {
+  for (let i = 0; i < Math.floor(canvas.height / 32); i++) {
     g_ctx.moveTo(0, i * 32);
-    g_ctx.lineTo(CANVAS_WIDTH, i * 32);
+    g_ctx.lineTo(canvas.width, i * 32);
     g_ctx.stroke();
   }
 }
@@ -130,7 +174,15 @@ canvas.addEventListener("mouseup", cancelPainting);
 canvas.addEventListener("mouseleave", cancelPainting);
 canvas.addEventListener("click", onCanvasClick);
 
+grid.addEventListener("mousemove", onMove);
+grid.addEventListener("mousedown", startPainting);
+grid.addEventListener("mouseup", cancelPainting);
+grid.addEventListener("mouseleave", cancelPainting);
+grid.addEventListener("click", onCanvasClick);
+
 lineWidth.addEventListener("input", onLineWidthChange);
+tileWidth.addEventListener("input", setCanvasSize);
+tileHeight.addEventListener("input", setCanvasSize);
 color.addEventListener("input", onColorChange);
 
 colorOptions.forEach((color) => color.addEventListener("click", onColorClick));
@@ -140,4 +192,5 @@ destroyBtn.addEventListener("click", onDestroyClick);
 eraseBtn.addEventListener("click", onEraserClick);
 saveBtn.addEventListener("click", onSaveClick);
 gridBtn.addEventListener("click", showGrid);
+setCanvasSize(32, 24);
 drawGrid();
