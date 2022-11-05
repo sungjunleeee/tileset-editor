@@ -21,6 +21,7 @@ grid.width = CANVAS_WIDTH;
 grid.height = CANVAS_HEIGHT;
 
 ctx.lineWidth = lineWidth;
+ctx.lineCap = "round";
 let isPainting = false;
 let isFilling = false;
 let isErasing = false;
