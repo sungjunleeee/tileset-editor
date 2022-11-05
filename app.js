@@ -30,43 +30,27 @@ let isFilling = false;
 let isErasing = false;
 
 function setCanvasSize() {
-  let x = document.getElementById("x-tile").value;
-  let y = document.getElementById("y-tile").value;
-  console.log(x, y);
-  canvas.width = x * 32;
-  canvas.style.width = String(x * 32) + "px";
-  canvas.height = y * 32;
-  canvas.style.height = String(y * 32) + "px";
-  grid.width = x * 32;
-  grid.style.width = String(x * 32) + "px";
-  grid.height = y * 32;
-  grid.style.height = String(y * 32) + "px";
+  let xTile = document.getElementById("x-tile");
+  let yTile = document.getElementById("y-tile");
+  x_val = xTile.value;
+  y_val = yTile.value;
+  canvas.width = x_val * 32;
+  canvas.height = y_val * 32;
+  grid.width = x_val * 32;
+  grid.height = y_val * 32;
+  xTile.nextElementSibling.value = x_val;
+  yTile.nextElementSibling.value = y_val;
+  canvas.style.width = String(x_val * 32) + "px";
+  canvas.style.height = String(y_val * 32) + "px";
+  grid.style.width = String(x_val * 32) + "px";
+  grid.style.height = String(y_val * 32) + "px";
 
   ctx = canvas.getContext("2d");
   g_ctx = grid.getContext("2d");
   ctx.lineWidth = lineWidth;
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
-  onDestroyClick();
   drawGrid();
-
-  gridBtn.removeEventListener();
-  function showGrid() {
-    console.log(grid.style.display);
-    if (grid.style.display != "none") {
-      grid.style = "display: none;";
-    } else {
-      grid.style = `width:${grid.width}; height:${grid.height}; position: absolute; left: 0; top: 0; z-index: 1;  `;
-    }
-  }
-  showGrid = function () {
-    console.log(grid.style.display);
-    if (grid.style.display != "none") {
-      grid.style = "display: none;";
-    } else {
-      grid.style = `width:${grid.width}; height:${grid.height}; position: absolute; left: 0; top: 0; z-index: 1;  `;
-    }
-  };
 }
 
 function onMove(event) {
@@ -145,11 +129,10 @@ function onSaveClick() {
 }
 
 function showGrid() {
-  console.log(grid.style.display);
   if (grid.style.display != "none") {
     grid.style = "display: none;";
   } else {
-    grid.style = `width:${grid.width}; height:${grid.height}; position: absolute; left: 0; top: 0; z-index: 1;  `;
+    grid.style = `position: absolute; left: 0px; top: 0px; z-index: 1; width: ${grid.width}px; height: ${grid.height}px;`;
   }
 }
 
