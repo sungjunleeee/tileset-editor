@@ -38,8 +38,6 @@ function setCanvasSize() {
   canvas.height = y_val * 32;
   grid.width = x_val * 32;
   grid.height = y_val * 32;
-  xTile.nextElementSibling.value = x_val;
-  yTile.nextElementSibling.value = y_val;
   canvas.style.width = String(x_val * 32) + "px";
   canvas.style.height = String(y_val * 32) + "px";
   grid.style.width = String(x_val * 32) + "px";
@@ -157,6 +155,13 @@ function drawGrid() {
   }
 }
 
+function onResize() {
+  let xTile = document.getElementById("x-tile");
+  let yTile = document.getElementById("y-tile");
+  xTile.nextElementSibling.value = xTile.value;
+  yTile.nextElementSibling.value = yTile.value;
+}
+
 canvas.addEventListener("mousemove", onMove);
 canvas.addEventListener("mousedown", startPainting);
 canvas.addEventListener("mouseup", cancelPainting);
@@ -170,8 +175,10 @@ grid.addEventListener("mouseleave", cancelPainting);
 grid.addEventListener("click", onCanvasClick);
 
 lineWidth.addEventListener("input", onLineWidthChange);
-tileWidth.addEventListener("input", setCanvasSize);
-tileHeight.addEventListener("input", setCanvasSize);
+tileWidth.addEventListener("change", setCanvasSize);
+tileHeight.addEventListener("change", setCanvasSize);
+tileWidth.addEventListener("input", onResize);
+tileHeight.addEventListener("input", onResize);
 color.addEventListener("input", onColorChange);
 
 colorOptions.forEach((color) => color.addEventListener("click", onColorClick));
