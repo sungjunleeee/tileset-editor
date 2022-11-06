@@ -47,10 +47,13 @@ function setCanvasSize() {
 
   ctx = canvas.getContext("2d");
   g_ctx = grid.getContext("2d");
-  ctx.lineWidth = lineWidth;
+  ctx.lineWidth = lineWidth.value;
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
   drawGrid();
+  ctx.strokeStyle = color.value;
+  ctx.fillStyle = color.value;
+  isErasing = false;
 }
 
 function onMove(event) {
@@ -92,6 +95,7 @@ function onModeClick() {
   if (isErasing) {
     isErasing = false;
     ctx.fillStyle = color.value;
+    modeBtn.innerText = "Fill";
   } else if (isFilling) {
     isFilling = false;
     ctx.fillStyle = color.value;
@@ -111,6 +115,7 @@ function onCanvasClick() {
 
 function onDestroyClick() {
   ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  window.removeEventListener("beforeunload", alertUser);
 }
 
 function onEraserClick() {
@@ -126,6 +131,7 @@ function onSaveClick() {
   a.href = url;
   a.download = "export.png";
   a.click();
+  window.removeEventListener("beforeunload", alertUser);
 }
 
 function showGrid() {
@@ -177,3 +183,10 @@ saveBtn.addEventListener("click", onSaveClick);
 gridBtn.addEventListener("click", showGrid);
 setCanvasSize(32, 24);
 drawGrid();
+
+function alertUser(event) {
+  event.preventDefault();
+  return (event.returnValue = "Are you sure you want to exit?");
+}
+
+window.addEventListener("beforeunload", alertUser);
